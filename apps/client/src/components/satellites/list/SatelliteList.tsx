@@ -5,12 +5,16 @@ import { useSatellites } from '../hooks/useSatellites';
 import { useSatelliteStore } from '../../../store';
 import { useShallow } from 'zustand/react/shallow';
 
+type DisplayRow =
+  | { readonly type: 'satellite'; readonly satellite: Satellite; readonly isDeletable: boolean }
+  | { readonly type: 'user'; readonly userId: string; readonly userName: string };
+
 type SatelliteListProps = {
-  satellites: Satellite[];
+  rows: DisplayRow[];
   panel?: React.ReactNode;
 };
 
-export const SatelliteList = ({ satellites, panel }: SatelliteListProps) => {
+export const SatelliteList = ({ rows, panel }: SatelliteListProps) => {
   const { clearSelection } = useSatelliteStore(
     useShallow((state) => ({
       clearSelection: state.clearSelection,
@@ -24,14 +28,18 @@ export const SatelliteList = ({ satellites, panel }: SatelliteListProps) => {
   };
 
   const { removeSatellite } = useSatellites();
+
+  const getRowKey = (row: DisplayRow): string =>
+    row.type === 'satellite' ? row.satellite.id : `user-${row.userId}`;
+
   return (
     <ul className="flex-1 space-y-2 overflow-y-auto" onClick={resetSelectionOnClick}>
       {panel && <li>{panel}</li>}
-      {satellites.length === 0 ? (
+      {rows.length === 0 ? (
         <NoSatellites />
       ) : (
-        satellites.map((satellite) => (
-          <SatelliteListItem key={satellite.id} satellite={satellite} onDelete={removeSatellite} />
+        rows.map((row) => (
+          <SatelliteListItem key={getRowKey(row)} row={row} onDelete={removeSatellite} />
         ))
       )}
     </ul>

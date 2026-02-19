@@ -1,7 +1,9 @@
+import * as Cesium from 'cesium';
 import type * as CesiumType from 'cesium';
 import { useEffect, useMemo, useRef } from 'react';
 import type { CesiumComponentRef } from 'resium';
 import { Viewer } from 'resium';
+import { VIEWER_PROPS, toUserEntityId } from '../config/constants';
 import { useSatellites } from '../../../components/satellites/hooks/useSatellites';
 import { ISS_PLACEHOLDER } from '../../../services/mocks/placeholderSatellite';
 import { useSatelliteStore } from '../../../store';
@@ -13,7 +15,8 @@ import { SatelliteDetails } from './SatelliteDetails';
 export const Globe = () => {
   const { satellites, error, isLoading, isFetching } = useSatellites('', true);
   const viewerRef = useRef<CesiumComponentRef<CesiumType.Viewer>>(null);
-  const selectedSatellite = useSatelliteStore((state) => state.selectedSatellite);
+  const selectedTarget = useSatelliteStore((state) => state.selectedTarget);
+
   useRealtimeClock(viewerRef);
   const sats = useMemo(() => {
     const issId = ISS_PLACEHOLDER.id;
@@ -29,46 +32,65 @@ export const Globe = () => {
   useEffect(() => {
     if (!viewerRef.current?.cesiumElement) return;
     const viewer = viewerRef.current.cesiumElement;
+    try {
+      viewer.scene.globe.depthTestAgainstTerrain = true;
+    } catch (err) {
+      console.error('Failed to enable depth test against terrain', err);
+    }
 
-    if (!selectedSatellite) {
+    try {
+      if (viewer.cesiumWidget && 'selectionIndicator' in viewer.cesiumWidget) {
+        const indicator = viewer.cesiumWidget.selectionIndicator as {
+          viewModel: { showSelection: boolean };
+        };
+        indicator.viewModel.showSelection = false;
+      }
+
+      const handler = viewer.screenSpaceEventHandler;
+      if (handler) {
+        handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        handler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+      }
+    } catch (err) {
+      console.error('Failed to disable viewer input/selection handlers', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!viewerRef.current?.cesiumElement) return;
+    const viewer = viewerRef.current.cesiumElement;
+
+    if (!selectedTarget) {
       viewer.trackedEntity = undefined;
-
-      viewer.scene.camera.flyHome(3);
-
+      try {
+        viewer.scene.camera.flyHome(3);
+      } catch (err) {
+        console.error('Error flying home', err);
+      }
       return;
     }
+
     try {
-      const entity = viewer.entities.getById(selectedSatellite.id);
+      const entityId =
+        selectedTarget.type === 'satellite'
+          ? selectedTarget.data.id
+          : toUserEntityId(selectedTarget.userId);
+      const entity = viewer.entities.getById(entityId);
       if (entity) {
         viewer.flyTo(entity, { duration: 1.5 });
-        viewer.trackedEntity = entity;
+        if (selectedTarget.type === 'satellite') {
+          viewer.trackedEntity = entity;
+        }
       }
-    } catch (error) {
-      console.error('Error flying to satellite:', error);
+    } catch (err) {
+      console.error('Error flying to selected target', err);
     }
-  }, [selectedSatellite]);
+  }, [selectedTarget]);
 
   return (
     <div className="flex flex-1 flex-col">
       <div className="border-(--foreground) bg-(--panel-bg) shadow-(--glow) h-fit border-2 p-1">
-        <Viewer
-          ref={viewerRef}
-          baseLayerPicker={false}
-          sceneModePicker={false}
-          homeButton={false}
-          animation={false}
-          timeline={false}
-          infoBox={false}
-          navigationHelpButton={false}
-          fullscreenButton={false}
-          resolutionScale={1.5}
-          useBrowserRecommendedResolution={true}
-          skyBox={false}
-          skyAtmosphere={false}
-          shadows={false}
-          scene3DOnly={true}
-          creditContainer={undefined}
-        >
+        <Viewer ref={viewerRef} {...VIEWER_PROPS}>
           <SatellitesLayer satellites={sats} />
         </Viewer>
       </div>

@@ -3,6 +3,9 @@ import { useMemo } from 'react';
 import { Entity } from 'resium';
 import type { Satellite } from '../../../types/satellite';
 import { tleToCartesian } from '../helpers/tleToCartesian';
+import { getDisableDepthTestDistance } from '../entityConfig';
+import { LABEL_SCALE_BY_DISTANCE, LABEL_FONT, POINT_OUTLINE_WIDTH } from '../config/constants';
+import { createPointProps } from '../config/pointConfig';
 
 type Props = { satellite: Satellite };
 
@@ -32,27 +35,34 @@ export const SatelliteEntity = ({ satellite }: Props) => {
     [],
   );
 
+  const disableDepthTestDistance = getDisableDepthTestDistance();
+
   return (
     <Entity
       id={satellite.id}
       name={satellite.name}
       position={position}
-      // point={{ pixelSize: 8, color: Cesium.Color.CHARTREUSE }}
-      point={{
+      point={createPointProps({
         pixelSize: pointSize,
         color: Cesium.Color.CHARTREUSE,
         outlineColor: Cesium.Color.WHITE,
-        outlineWidth: 2,
-        disableDepthTestDistance: Number.POSITIVE_INFINITY,
-      }}
+        outlineWidth: POINT_OUTLINE_WIDTH,
+        disableDepthTestDistance,
+      })}
       label={{
         text: satellite.name,
         fillColor: Cesium.Color.CHARTREUSE,
-        font: '12px Courier New',
+        font: LABEL_FONT,
         showBackground: true,
         backgroundColor: Cesium.Color.BLACK.withAlpha(0.7),
         horizontalOrigin: Cesium.HorizontalOrigin.LEFT,
         pixelOffset: new Cesium.Cartesian2(10, 0),
+        scaleByDistance: new Cesium.NearFarScalar(
+          LABEL_SCALE_BY_DISTANCE[0],
+          LABEL_SCALE_BY_DISTANCE[1],
+          LABEL_SCALE_BY_DISTANCE[2],
+          LABEL_SCALE_BY_DISTANCE[3],
+        ),
       }}
       path={{
         resolution: 24,

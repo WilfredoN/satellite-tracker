@@ -1,14 +1,14 @@
 import { create } from 'zustand';
-import type { Satellite } from '../types/satellite';
+import type { SelectableTarget } from '../types/satellite';
 
 type SatelliteState = {
-  selectedSatellite: Satellite | null;
-  selectSatellite: (satellite: Satellite) => void;
+  selectedTarget: SelectableTarget | null;
+  selectTarget: (target: SelectableTarget) => void;
   clearSelection: () => void;
 };
 
 export const useSatelliteStore = create<SatelliteState>((set) => ({
-  selectedSatellite: null,
-  selectSatellite: (satellite) => set({ selectedSatellite: satellite }),
-  clearSelection: () => set({ selectedSatellite: null }),
+  selectedTarget: null,
+  selectTarget: (target: SelectableTarget) => set({ selectedTarget: target }),
+  clearSelection: () => set({ selectedTarget: null }),
 }));
