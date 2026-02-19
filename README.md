@@ -49,6 +49,7 @@
   - [x] Implement user and satellite models
   - [x] Create endpoints for user and satellite management
   - [x] Integrate database (PostgreSQL via SQLAlchemy)
+  - [ ] Optimization for scheduling satellite visibility checks (e.g., Celery, Redis)
   - [ ] Add authentication & user management improvements
   - [ ] Add API tests
   - [ ] Refactor users table for multi-deployment support

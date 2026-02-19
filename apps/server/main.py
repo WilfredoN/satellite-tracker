@@ -6,6 +6,7 @@ from typing import Union
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from schemas import (
+    UserLogin,
     UserRegister,
     SatelliteCreate,
     UserResponse,
@@ -92,7 +93,7 @@ async def register_user(user: UserRegister, db: Session = Depends(get_db)):
 
 
 @app.post("/login")
-async def login_user(user: UserRegister, db: Session = Depends(get_db)):
+async def login_user(user: UserLogin, db: Session = Depends(get_db)):
     db_user = get_user_by_login(db, user.login)
 
     if not db_user or not verify_password(user.password, db_user.password):

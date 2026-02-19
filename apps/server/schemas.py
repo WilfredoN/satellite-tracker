@@ -27,6 +27,11 @@ class UserRegister(BaseModel):
     longitude: float
 
 
+class UserLogin(BaseModel):
+    login: str
+    password: str
+
+
 class UserModel(BaseModel):
     id: int
     login: str

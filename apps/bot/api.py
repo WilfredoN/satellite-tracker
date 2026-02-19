@@ -1,7 +1,7 @@
 import os
 import requests
 
-from apps.bot.dto import UserCreateDTO
+from dto import UserCreateDTO
 
 
 def _prepare_api_url(raw_url: str | None) -> str:
