@@ -76,7 +76,7 @@ export const SatelliteListItem = ({ row, onDelete }: SatelliteListItemProps) => 
         <button
           aria-label="Delete satellite"
           onClick={handleDelete}
-          className="text-(--destructive) hover:text-(--foreground) absolute right-2 top-2 cursor-pointer text-xl font-bold focus:outline-none"
+          className="text-(--destructive) absolute right-2 top-2 cursor-pointer text-xl font-bold focus:outline-none"
         >
           ×
         </button>
