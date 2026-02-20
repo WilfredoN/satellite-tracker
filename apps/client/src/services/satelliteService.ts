@@ -5,7 +5,9 @@ import { mapApiToSatellite } from './mappers';
 export const satelliteService = {
   async getAll(): Promise<Satellite[]> {
     try {
-      const res = await fetch(`${API_URL}/satellites`);
+      const res = await fetch(`${API_URL}/satellites`, {
+        credentials: 'include',
+      });
       if (!res.ok) throw new Error(`Response status: ${res.status}`);
       const data = await res.json();
       return (data.satellites || []).map(mapApiToSatellite);
@@ -20,6 +22,7 @@ export const satelliteService = {
       const res = await fetch(`${API_URL}/satellites`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({
           name: satellite.name,
           tle_1: satellite.tle1,
@@ -41,7 +44,10 @@ export const satelliteService = {
 
   async remove(id: string): Promise<void> {
     try {
-      const res = await fetch(`${API_URL}/satellites/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_URL}/satellites/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
       if (!res.ok) throw new Error(`Response status: ${res.status}`);
     } catch (error) {
       console.error(error);

@@ -1,7 +1,7 @@
 from db.database import SessionLocal
 from db.schema import User as UserModel, Satellite as SatelliteModel
 from db.tables import create_tables
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request, Response, HTTPException
 from typing import Union
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -23,6 +23,9 @@ from helpers import (
     get_user_by_id,
     get_user_by_login,
     get_satellite_by_id,
+    create_session,
+    get_session_user_id,
+    delete_session,
 )
 from mappers import user_to_response, satellite_to_response
 
@@ -41,7 +44,7 @@ app = FastAPI(title="Satellite Tracker API", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173", "http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -54,6 +57,24 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+async def get_current_user(
+    request: Request, db: Session = Depends(get_db)
+) -> UserModel:
+    session_id = request.cookies.get("session_id")
+    if not session_id:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+
+    user_id = get_session_user_id(session_id)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Session expired or invalid")
+
+    user = get_user_by_id(db, user_id)
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    return user
 
 
 @app.get("/")
@@ -93,11 +114,26 @@ async def register_user(user: UserRegister, db: Session = Depends(get_db)):
 
 
 @app.post("/login")
-async def login_user(user: UserLogin, db: Session = Depends(get_db)):
+async def login_user(
+    user: UserLogin, response: Response, db: Session = Depends(get_db)
+) -> Union[MessageResponse, JSONResponse]:
     db_user = get_user_by_login(db, user.login)
 
     if not db_user or not verify_password(user.password, db_user.password):
-        return {"error": "Invalid login or password"}
+        return JSONResponse(
+            status_code=401, content={"error": "Invalid login or password"}
+        )
+
+    session_id = create_session(db_user.id)
+
+    response.set_cookie(
+        key="session_id",
+        value=session_id,
+        httponly=True,
+        max_age=7 * 24 * 60 * 60,
+        samesite="lax",
+        secure=False,
+    )
 
     return JSONResponse(
         status_code=200,
@@ -106,6 +142,27 @@ async def login_user(user: UserLogin, db: Session = Depends(get_db)):
             "user": user_to_response(db_user).model_dump(),
         },
     )
+
+
+@app.get("/me", response_model=UserResponse)
+async def get_current_user_info(current_user: UserModel = Depends(get_current_user)):
+    return user_to_response(current_user)
+
+
+@app.post("/logout")
+async def logout_user(request: Request, response: Response):
+    session_id = request.cookies.get("session_id")
+    if session_id:
+        delete_session(session_id)
+
+    response.delete_cookie(
+        key="session_id",
+        httponly=True,
+        samesite="lax",
+        secure=False,
+    )
+
+    return {"message": "Logged out successfully"}
 
 
 @app.get("/users/{id}", response_model=UserResponse)

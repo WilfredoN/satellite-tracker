@@ -65,7 +65,7 @@
   - [x] Support tracking of any number of satellites (>=1)
   - [ ] Display random tips, satellite facts, or ASCII art in a terminal-style-box
   - [ ] Benchmark and optimize performance for large number of satellites
-  - [ ] Show user's location on the globe
+  - [x] Show user's location on the globe
   - [x] Display satellite details on click
   - [ ] Add estimation of when satellite passes over user location next time
   - [ ] Improve UI/UX for satellite management
@@ -79,6 +79,7 @@
 
 - [ ] **Integration & Dashboard**
   - [x] Combine client, backend, and bot into a unified dashboard app
+  - [x] Add user authentication persistence (cookies, JWT, etc.)
   - [ ] Add admin/monitoring features
 
 - [ ] **Testing & Quality**

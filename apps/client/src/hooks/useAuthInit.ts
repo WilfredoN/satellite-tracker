@@ -10,7 +10,7 @@ export function useAuthInit() {
   useEffect(() => {
     setLoading(true);
     usersService
-      .getUser()
+      .getMe()
       .then((user) => {
         setUser(user);
       })
