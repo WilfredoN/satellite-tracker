@@ -1,5 +1,5 @@
 import type { AddSatelliteData, Satellite } from '../types/satellite';
-import { API_URL } from '.';
+import { API_URL, ApiError } from '.';
 import { mapApiToSatellite } from './mappers';
 
 export const satelliteService = {
@@ -8,7 +8,10 @@ export const satelliteService = {
       const res = await fetch(`${API_URL}/satellites`, {
         credentials: 'include',
       });
-      if (!res.ok) throw new Error(`Response status: ${res.status}`);
+      if (!res.ok) {
+        if (res.status === 401) throw ApiError(401, 'Unauthorized');
+        throw ApiError(res.status, `Response status: ${res.status}`);
+      }
       const data = await res.json();
       return (data.satellites || []).map(mapApiToSatellite);
     } catch (error) {

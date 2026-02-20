@@ -1,9 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
+import type { ApiErrorShape } from '../../../services';
 import { ISS_PLACEHOLDER } from '../../../services/mocks/placeholderSatellite';
 import { satelliteService } from '../../../services/satelliteService';
-import type { AddSatelliteData,Satellite } from '../../../types/satellite';
+import type { AddSatelliteData, Satellite } from '../../../types/satellite';
 
 const SATELLITES_QUERY_KEY = ['satellites'];
 
@@ -59,6 +60,7 @@ export const useSatellites = (filter: string = '', usePlaceholder = true) => {
     isLoading,
     isFetching,
     error,
+    isAuthorizing: (error as unknown as ApiErrorShape)?.status === 401,
     addSatellite,
     addMutation,
     removeSatellite,

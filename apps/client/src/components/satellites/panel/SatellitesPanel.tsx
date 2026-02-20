@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import type { ApiErrorShape } from '../../../services';
 import { ISS_PLACEHOLDER } from '../../../services/mocks/placeholderSatellite';
 import { useAuthStore } from '../../../store';
 import type { Satellite } from '../../../types/satellite';
@@ -20,7 +21,8 @@ type DisplayRow =
 export const SatellitesPanel = () => {
   const [search, setSearch] = useState('');
   const [addOpen, setAddOpen] = useState(false);
-  const { satellites, isLoading, isFetching, error, addSatellite, refetch } = useSatellites(search);
+  const { satellites, isLoading, isFetching, error, addSatellite, refetch, isAuthorizing } =
+    useSatellites(search);
   const user = useAuthStore((s) => s.user);
 
   const buildDisplayRows = (list: Satellite[]): DisplayRow[] => {
@@ -53,9 +55,23 @@ export const SatellitesPanel = () => {
           panel={<SatellitesPanelLoading />}
           rows={buildDisplayRows([ISS_PLACEHOLDER])}
         />
+      ) : isAuthorizing ? (
+        <SatelliteList
+          panel={
+            <SatellitesPanelError message={'AUTHORISING — awaiting login'} onRetry={refetch} />
+          }
+          rows={buildDisplayRows([ISS_PLACEHOLDER])}
+        />
       ) : error ? (
         <SatelliteList
-          panel={<SatellitesPanelError onRetry={refetch} />}
+          panel={
+            <SatellitesPanelError
+              onRetry={refetch}
+              message={String(
+                (error as unknown as ApiErrorShape)?.message || 'SATELLITE DATA UNAVAILABLE',
+              )}
+            />
+          }
           rows={buildDisplayRows([ISS_PLACEHOLDER])}
         />
       ) : (

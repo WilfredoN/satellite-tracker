@@ -1,36 +1,34 @@
+from contextlib import asynccontextmanager
+
 from db.database import SessionLocal
-from db.schema import User as UserModel, Satellite as SatelliteModel
+from db.schema import Satellite as SatelliteModel
+from db.schema import User as UserModel
 from db.tables import create_tables
-from fastapi import Depends, FastAPI, Request, Response, HTTPException
-from typing import Union
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from schemas import (
-    UserLogin,
-    UserRegister,
-    SatelliteCreate,
-    UserResponse,
-    UsersListResponse,
-    SatellitesListResponse,
-    MessageResponse,
-)
-
-from sqlalchemy.orm import Session
 from helpers import (
-    not_found_response,
-    hash_password,
-    verify_password,
+    create_session,
+    delete_session,
+    get_satellite_by_id,
+    get_session_user_id,
     get_user_by_id,
     get_user_by_login,
-    get_satellite_by_id,
-    create_session,
-    get_session_user_id,
-    delete_session,
+    hash_password,
+    not_found_response,
+    verify_password,
 )
-from mappers import user_to_response, satellite_to_response
-
-
-from contextlib import asynccontextmanager
+from mappers import satellite_to_response, user_to_response
+from schemas import (
+    MessageResponse,
+    SatelliteCreate,
+    SatellitesListResponse,
+    UserLogin,
+    UserRegister,
+    UserResponse,
+    UsersListResponse,
+)
+from sqlalchemy.orm import Session
 
 
 @asynccontextmanager
@@ -114,9 +112,7 @@ async def register_user(user: UserRegister, db: Session = Depends(get_db)):
 
 
 @app.post("/login")
-async def login_user(
-    user: UserLogin, response: Response, db: Session = Depends(get_db)
-) -> Union[MessageResponse, JSONResponse]:
+async def login_user(user: UserLogin, db: Session = Depends(get_db)):
     db_user = get_user_by_login(db, user.login)
 
     if not db_user or not verify_password(user.password, db_user.password):
@@ -126,7 +122,15 @@ async def login_user(
 
     session_id = create_session(db_user.id)
 
-    response.set_cookie(
+    json_response = JSONResponse(
+        status_code=200,
+        content={
+            "message": f"User {user.login} logged in successfully",
+            "user": user_to_response(db_user).model_dump(),
+        },
+    )
+
+    json_response.set_cookie(
         key="session_id",
         value=session_id,
         httponly=True,
@@ -135,13 +139,7 @@ async def login_user(
         secure=False,
     )
 
-    return JSONResponse(
-        status_code=200,
-        content={
-            "message": f"User {user.login} logged in successfully",
-            "user": user_to_response(db_user).model_dump(),
-        },
-    )
+    return json_response
 
 
 @app.get("/me", response_model=UserResponse)
@@ -215,9 +213,7 @@ async def get_satellites(db: Session = Depends(get_db)) -> SatellitesListRespons
 
 
 @app.post("/satellites", response_model=MessageResponse)
-async def add_satellite(
-    satellite: SatelliteCreate, db: Session = Depends(get_db)
-) -> Union[MessageResponse, JSONResponse]:
+async def add_satellite(satellite: SatelliteCreate, db: Session = Depends(get_db)):
     db_satellite = (
         db.query(SatelliteModel)
         .filter(SatelliteModel.name.ilike(satellite.name))
@@ -249,9 +245,7 @@ async def add_satellite(
 
 
 @app.delete("/satellites/{id}", response_model=MessageResponse)
-async def delete_satellite(
-    id: int, db: Session = Depends(get_db)
-) -> Union[MessageResponse, JSONResponse]:
+async def delete_satellite(id: int, db: Session = Depends(get_db)):
     db_satellite = get_satellite_by_id(db, id)
 
     if not db_satellite:

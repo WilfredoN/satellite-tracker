@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
 import { API_URL } from '../../services';
-import { type AuthState,useAuthStore } from '../../store';
+import { type AuthState, useAuthStore } from '../../store';
 import { Button, Input } from '../ui';
 
 export function LoginModal() {
   const setUser = useAuthStore((state: AuthState) => state.setUser);
+  const setAuthStatus = useAuthStore((state: AuthState) => state.setAuthStatus);
   const setError = useAuthStore((state: AuthState) => state.setError);
   const error = useAuthStore((state: AuthState) => state.error);
 
@@ -29,6 +30,7 @@ export function LoginModal() {
       const data = await response.json();
       if (response.ok && data.user) {
         setUser(data.user);
+        setAuthStatus('authenticated');
       } else {
         setError(data.error || 'Login failed');
       }

@@ -1,5 +1,5 @@
 import type { User } from '../types/users';
-import { API_URL } from '.';
+import { API_URL, ApiError } from '.';
 
 export const usersService = {
   async getUser(): Promise<User | null> {
@@ -29,15 +29,15 @@ export const usersService = {
       });
       if (!response.ok) {
         if (response.status === 401) {
-          return null;
+          throw ApiError(401, 'Unauthorized');
         }
-        throw new Error(`Response status: ${response.status}`);
+        throw ApiError(response.status, `Response status: ${response.status}`);
       }
       const data = await response.json();
       return data as User;
     } catch (error: unknown) {
       console.error('Failed to fetch current user:', error);
-      return null;
+      throw error;
     }
   },
 
