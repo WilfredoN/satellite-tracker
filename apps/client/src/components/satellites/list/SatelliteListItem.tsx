@@ -1,4 +1,5 @@
 import { useShallow } from 'zustand/react/shallow';
+
 import { useSatelliteStore } from '../../../store';
 import type { Satellite } from '../../../types/satellite';
 

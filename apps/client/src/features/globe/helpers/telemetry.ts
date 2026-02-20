@@ -1,6 +1,7 @@
 import * as Cesium from 'cesium';
-import { tleToCartesian } from './tleToCartesian';
+
 import type { TLE } from '../../../types/satellite';
+import { tleToCartesian } from './tleToCartesian';
 
 type Position = {
   readonly lat: number;

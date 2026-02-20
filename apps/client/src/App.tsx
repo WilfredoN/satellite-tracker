@@ -1,9 +1,10 @@
 import './App.css';
+
 import { SatellitesPanel } from './components/satellites/panel/SatellitesPanel';
-import { Globe } from './features/globe/components/Globe';
-import { useAuthStore } from './store/authStore';
-import { useAuthInit } from './hooks/useAuthInit';
 import { LoginModal } from './components/users/LoginModal';
+import { Globe } from './features/globe/components/Globe';
+import { useAuthInit } from './hooks/useAuthInit';
+import { useAuthStore } from './store/authStore';
 
 const App = () => {
   useAuthInit();

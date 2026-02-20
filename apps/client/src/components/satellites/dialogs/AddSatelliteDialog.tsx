@@ -1,10 +1,10 @@
-import { useState, useCallback } from 'react';
-import { useOutsideClicks } from '../../../hooks/useOutsideClicks';
-import { Input, Button } from '../../ui';
-import type { AddSatelliteData } from '../../../types';
-import { parseTLEPaste } from './tleHelpers';
+import { useCallback,useState } from 'react';
 
+import { useOutsideClicks } from '../../../hooks/useOutsideClicks';
+import type { AddSatelliteData } from '../../../types';
+import { Button,Input } from '../../ui';
 import { useSatellites } from '../hooks/useSatellites';
+import { parseTLEPaste } from './tleHelpers';
 
 type AddSatelliteDialogProps = {
   open: boolean;

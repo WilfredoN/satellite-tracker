@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import type { SelectableTarget } from '../types/satellite';
 
 type SatelliteState = {

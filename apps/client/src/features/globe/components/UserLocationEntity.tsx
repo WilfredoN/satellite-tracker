@@ -1,15 +1,16 @@
 import * as Cesium from 'cesium';
 import { Entity } from 'resium';
+
 import type { User } from '../../../types/users';
-import { getDisableDepthTestDistance } from '../entityConfig';
 import {
   USER_ENTITY_ID_PREFIX,
-  USER_POINT_PIXEL_SIZE,
-  USER_POINT_OUTLINE_WIDTH,
   USER_LABEL_FONT,
   USER_LABEL_SCALE_BY_DISTANCE,
+  USER_POINT_OUTLINE_WIDTH,
+  USER_POINT_PIXEL_SIZE,
 } from '../config/constants';
 import { createPointProps } from '../config/pointConfig';
+import { getDisableDepthTestDistance } from '../entityConfig';
 
 type Props = { user: User };
 

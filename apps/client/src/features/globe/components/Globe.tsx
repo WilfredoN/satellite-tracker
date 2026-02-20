@@ -1,16 +1,16 @@
-import * as Cesium from 'cesium';
 import type * as CesiumType from 'cesium';
+import * as Cesium from 'cesium';
 import { useEffect, useMemo, useRef } from 'react';
 import type { CesiumComponentRef } from 'resium';
 import { Viewer } from 'resium';
-import { VIEWER_PROPS, toUserEntityId } from '../config/constants';
+
 import { useSatellites } from '../../../components/satellites/hooks/useSatellites';
 import { ISS_PLACEHOLDER } from '../../../services/mocks/placeholderSatellite';
 import { useSatelliteStore } from '../../../store';
+import { toUserEntityId,VIEWER_PROPS } from '../config/constants';
 import { useRealtimeClock } from '../hooks/useRealtimeClock';
-
-import { SatellitesLayer } from './SatellitesLayer';
 import { SatelliteDetails } from './SatelliteDetails';
+import { SatellitesLayer } from './SatellitesLayer';
 
 export const Globe = () => {
   const { satellites, error, isLoading, isFetching } = useSatellites('', true);

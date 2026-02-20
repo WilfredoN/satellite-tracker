@@ -1,7 +1,7 @@
+import { useAuthStore } from '../../../store';
 import type { Satellite } from '../../../types/satellite';
 import { SatelliteEntity } from './SatelliteEntity';
 import { UserLocationEntity } from './UserLocationEntity';
-import { useAuthStore } from '../../../store';
 
 type Props = { satellites: Satellite[] };
 

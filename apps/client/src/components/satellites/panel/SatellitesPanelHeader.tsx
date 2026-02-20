@@ -1,7 +1,7 @@
+import { usersService } from '../../../services/usersService';
+import { useAuthStore } from '../../../store';
 import { Button } from '../../ui/button';
 import { Input } from '../../ui/input';
-import { useAuthStore } from '../../../store';
-import { usersService } from '../../../services/usersService';
 
 type SatellitesPanelHeaderProps = {
   search: string;

@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ChangeEvent } from 'react';
+import type { ChangeEvent,InputHTMLAttributes } from 'react';
 import { useRef } from 'react';
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {

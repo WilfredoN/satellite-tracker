@@ -1,16 +1,17 @@
 import { useState } from 'react';
-import {
-  SatellitesPanelLayout,
-  SatellitesPanelHeader,
-  SatellitesPanelLoading,
-  SatellitesPanelError,
-} from '.';
-import { SatelliteList } from '../list/SatelliteList';
-import { useSatellites } from '../hooks/useSatellites';
-import { AddSatelliteDialog } from '../dialogs/AddSatelliteDialog';
+
 import { ISS_PLACEHOLDER } from '../../../services/mocks/placeholderSatellite';
 import { useAuthStore } from '../../../store';
 import type { Satellite } from '../../../types/satellite';
+import { AddSatelliteDialog } from '../dialogs/AddSatelliteDialog';
+import { useSatellites } from '../hooks/useSatellites';
+import { SatelliteList } from '../list/SatelliteList';
+import {
+  SatellitesPanelError,
+  SatellitesPanelHeader,
+  SatellitesPanelLayout,
+  SatellitesPanelLoading,
+} from '.';
 
 type DisplayRow =
   | { readonly type: 'satellite'; readonly satellite: Satellite; readonly isDeletable: boolean }

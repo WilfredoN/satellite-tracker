@@ -1,9 +1,10 @@
+import { useShallow } from 'zustand/react/shallow';
+
+import { useSatelliteStore } from '../../../store';
 import type { Satellite } from '../../../types/satellite';
+import { useSatellites } from '../hooks/useSatellites';
 import { NoSatellites } from './NoSatellites';
 import { SatelliteListItem } from './SatelliteListItem';
-import { useSatellites } from '../hooks/useSatellites';
-import { useSatelliteStore } from '../../../store';
-import { useShallow } from 'zustand/react/shallow';
 
 type DisplayRow =
   | { readonly type: 'satellite'; readonly satellite: Satellite; readonly isDeletable: boolean }

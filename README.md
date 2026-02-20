@@ -7,6 +7,7 @@
 
 - [About](#about)
 - [Features](#features)
+- [Roadmap](#roadmap)
 - [Installation](#installation)
   - [Client Setup](#client-setup)
   - [Backend (Python) Setup](#backend-python-setup)
@@ -50,9 +51,8 @@
   - [x] Create endpoints for user and satellite management
   - [x] Integrate database (PostgreSQL via SQLAlchemy)
   - [ ] Optimization for scheduling satellite visibility checks (e.g., Celery, Redis)
-  - [ ] Add authentication & user management improvements
   - [ ] Add API tests
-  - [ ] Refactor users table for multi-deployment support
+  - [x] Refactor users table for multi-deployment support
 
 - [x] **Satellite Calculation Logic**
   - [x] Implement TLE parsing and satellite position calculation (Skyfield, sgp4)

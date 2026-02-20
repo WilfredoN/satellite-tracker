@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { useAuthStore, type AuthState } from '../../store';
+
 import { API_URL } from '../../services';
+import { type AuthState,useAuthStore } from '../../store';
 import { Button, Input } from '../ui';
 
 export function LoginModal() {

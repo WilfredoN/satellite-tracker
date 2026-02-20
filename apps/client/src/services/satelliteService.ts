@@ -1,5 +1,5 @@
-import { API_URL } from '.';
 import type { AddSatelliteData, Satellite } from '../types/satellite';
+import { API_URL } from '.';
 import { mapApiToSatellite } from './mappers';
 
 export const satelliteService = {

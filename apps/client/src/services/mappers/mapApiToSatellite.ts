@@ -1,4 +1,4 @@
-import type { SatelliteApi, Satellite } from '../../types/satellite';
+import type { Satellite,SatelliteApi } from '../../types/satellite';
 
 export const mapApiToSatellite = (api: SatelliteApi): Satellite => {
   return {

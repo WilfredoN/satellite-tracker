@@ -1,5 +1,5 @@
-import { API_URL } from '.';
 import type { User } from '../types/users';
+import { API_URL } from '.';
 
 export const usersService = {
   async getUser(): Promise<User | null> {

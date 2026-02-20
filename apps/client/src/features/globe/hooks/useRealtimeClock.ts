@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
-import type { RefObject } from 'react';
-import type { CesiumComponentRef } from 'resium';
 import * as Cesium from 'cesium';
+import type { RefObject } from 'react';
+import { useEffect } from 'react';
+import type { CesiumComponentRef } from 'resium';
+
 import { configureRealtimeClock } from '../helpers/realtimeClock';
 
 type ViewerRef = RefObject<CesiumComponentRef<Cesium.Viewer> | null>;

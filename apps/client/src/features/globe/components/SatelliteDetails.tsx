@@ -1,7 +1,9 @@
-import { useEffect, useState, useMemo } from 'react';
-import { useSatelliteStore, useAuthStore } from '../../../store';
-import { getSatellitePosition, getUserPosition, parseTelemetry } from '../helpers/telemetry';
+import { useEffect, useMemo,useState } from 'react';
+
+import { useAuthStore,useSatelliteStore } from '../../../store';
 import type { SelectableTarget } from '../../../types/satellite';
+import { getSatellitePosition, getUserPosition, parseTelemetry } from '../helpers/telemetry';
+
 type Position = { readonly lat: number; readonly lon: number; readonly alt: number };
 const computePosition = (
   target: SelectableTarget | null,
@@ -32,12 +34,10 @@ export const SatelliteDetails = () => {
   }, [selectedTarget, user]);
   if (!selectedTarget) {
     return (
-      <div className="border-(--foreground) bg-(--panel-bg) shadow-(--glow) mt-2 flex h-48 items-center justify-center border-2">
-        {' '}
+      <div className="border-(--foreground) bg-(--panel-bg) shadow-(--glow) mt-2 flex h-full items-center justify-center border-2">
         <span className="font-mono text-lg text-green-400 opacity-80">
-          {' '}
-          Select a satellite to view details{' '}
-        </span>{' '}
+          Select a satellite to view details
+        </span>
       </div>
     );
   }
@@ -59,43 +59,33 @@ export const SatelliteDetails = () => {
         };
   return (
     <div className="border-(--foreground) bg-(--panel-bg) shadow-(--glow) mt-2 border-2 p-4 font-mono text-sm text-green-400">
-      {' '}
-      <div className="mb-2 text-center text-2xl font-bold">{displayName}</div>{' '}
+      <div className="mb-2 text-center text-2xl font-bold">{displayName}</div>
       <div className="grid grid-cols-4 gap-x-4 gap-y-2">
-        {' '}
         <div className="min-w-35">
-          {' '}
-          <span>ID: {displayId}</span>{' '}
-        </div>{' '}
+          <span>ID: {displayId}</span>
+        </div>
         <div className="min-w-35">
-          {' '}
-          <span>Eccentricity: {telemetry.eccentricity ?? 'N/A'}</span>{' '}
-        </div>{' '}
+          <span>Eccentricity: {telemetry.eccentricity ?? 'N/A'}</span>
+        </div>
         <div className="min-w-35">
-          {' '}
-          <span>Perigee: {telemetry.perigee ?? 'N/A'} km</span>{' '}
-        </div>{' '}
+          <span>Perigee: {telemetry.perigee ?? 'N/A'} km</span>
+        </div>
         <div className="min-w-35">
-          {' '}
-          <span>Mean Anomaly: {telemetry.meanAnomaly ?? 'N/A'}°</span>{' '}
-        </div>{' '}
+          <span>Mean Anomaly: {telemetry.meanAnomaly ?? 'N/A'}°</span>
+        </div>
         <div className="min-w-35">
-          {' '}
-          <span>Speed: {telemetry.speed ? telemetry.speed.toFixed(2) : 'N/A'} km/s</span>{' '}
-        </div>{' '}
+          <span>Speed: {telemetry.speed ? telemetry.speed.toFixed(2) : 'N/A'} km/s</span>
+        </div>
         <div className="min-w-35">
-          {' '}
-          <span>Latitude: {position ? position.lat.toFixed(4) : 'N/A'}°</span>{' '}
-        </div>{' '}
+          <span>Latitude: {position ? position.lat.toFixed(4) : 'N/A'}°</span>
+        </div>
         <div className="min-w-35">
-          {' '}
-          <span>Longitude: {position ? position.lon.toFixed(4) : 'N/A'}°</span>{' '}
-        </div>{' '}
+          <span>Longitude: {position ? position.lon.toFixed(4) : 'N/A'}°</span>
+        </div>
         <div className="min-w-35">
-          {' '}
-          <span>Altitude: {position ? position.alt.toFixed(0) : 'N/A'} m</span>{' '}
-        </div>{' '}
-      </div>{' '}
+          <span>Altitude: {position ? position.alt.toFixed(0) : 'N/A'} m</span>
+        </div>
+      </div>
     </div>
   );
 };

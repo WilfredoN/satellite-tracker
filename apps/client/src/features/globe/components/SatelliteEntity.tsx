@@ -1,11 +1,12 @@
 import * as Cesium from 'cesium';
 import { useMemo } from 'react';
 import { Entity } from 'resium';
+
 import type { Satellite } from '../../../types/satellite';
-import { tleToCartesian } from '../helpers/tleToCartesian';
-import { getDisableDepthTestDistance } from '../entityConfig';
-import { LABEL_SCALE_BY_DISTANCE, LABEL_FONT, POINT_OUTLINE_WIDTH } from '../config/constants';
+import { LABEL_FONT, LABEL_SCALE_BY_DISTANCE, POINT_OUTLINE_WIDTH } from '../config/constants';
 import { createPointProps } from '../config/pointConfig';
+import { getDisableDepthTestDistance } from '../entityConfig';
+import { tleToCartesian } from '../helpers/tleToCartesian';
 
 type Props = { satellite: Satellite };
 

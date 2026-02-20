@@ -1,1 +1,1 @@
-export type { Satellite, AddSatelliteData, SatelliteApi } from './satellite';
+export type { AddSatelliteData, Satellite, SatelliteApi } from './satellite';

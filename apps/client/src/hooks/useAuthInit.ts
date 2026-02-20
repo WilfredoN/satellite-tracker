@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { useAuthStore } from '../store/authStore';
+
 import { usersService } from '../services/usersService';
+import { useAuthStore } from '../store/authStore';
 
 export function useAuthInit() {
   const setUser = useAuthStore((s) => s.setUser);
