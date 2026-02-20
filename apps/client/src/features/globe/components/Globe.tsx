@@ -63,6 +63,7 @@ export const Globe = () => {
     if (!selectedTarget) {
       viewer.trackedEntity = undefined;
       try {
+        viewer.scene?.camera?.cancelFlight?.();
         viewer.scene.camera.flyHome(3);
       } catch (err) {
         console.error('Error flying home', err);
@@ -77,6 +78,7 @@ export const Globe = () => {
           : toUserEntityId(selectedTarget.userId);
       const entity = viewer.entities.getById(entityId);
       if (entity) {
+        viewer.scene?.camera?.cancelFlight?.();
         viewer.flyTo(entity, { duration: 1.5 });
         if (selectedTarget.type === 'satellite') {
           viewer.trackedEntity = entity;
